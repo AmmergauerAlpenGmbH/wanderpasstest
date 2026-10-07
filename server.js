@@ -222,6 +222,16 @@ const server = http.createServer(async (req, res) => {
       return json(res, 403, { error: "Ungültige Herkunft der Anfrage." });
 
     if (req.method === "POST" && url.pathname === "/api/admin/login") {
+      if (req.method === "POST" && url.pathname === "/api/admin/login") {
+ 
+return json(res, 200, {
+reached: true
+});
+ 
+const retry = rateLimit(`admin:login:${clientIp(req)}`, LIMITS.adminLoginIp);
+ 
+// ...
+}
       const retry = rateLimit(`admin:login:${clientIp(req)}`, LIMITS.adminLoginIp);
       if (retry) return json(res, 429, { error: "Zu viele Anmeldeversuche. Bitte später erneut versuchen.", retryAfter: retry });
       const b = await body(req);
