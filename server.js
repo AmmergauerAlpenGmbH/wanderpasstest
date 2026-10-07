@@ -225,12 +225,7 @@ const server = http.createServer(async (req, res) => {
       const retry = rateLimit(`admin:login:${clientIp(req)}`, LIMITS.adminLoginIp);
       if (retry) return json(res, 429, { error: "Zu viele Anmeldeversuche. Bitte später erneut versuchen.", retryAfter: retry });
       const b = await body(req);
-      console.log("ADMIN_USER:", process.env.ADMIN_USER);
-console.log("ADMIN_PASSWORD_HASH vorhanden:", !!process.env.ADMIN_PASSWORD_HASH);
-      return json(res, 200, {
-adminUser: process.env.ADMIN_USER,
-hashPresent: !!process.env.ADMIN_PASSWORD_HASH
-});
+    
       const configuredUser = process.env.ADMIN_USER;
       const configuredHash = process.env.ADMIN_PASSWORD_HASH;
       if (!configuredUser || !configuredHash) return json(res, 503, { error: "Admin-Zugang ist auf dem Server nicht vollständig konfiguriert." });
