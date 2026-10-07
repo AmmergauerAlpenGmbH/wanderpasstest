@@ -469,10 +469,7 @@ function distanceMeters(a,b,c,d){
 }
 
 const port = Number(process.env.PORT || 8081);
- 
-server.listen(port, () =>
-console.log(`Wanderpass läuft auf Port ${port}`)
-);
+server.listen(port, () => console.log(`Wanderpass läuft auf Port ${port}`));
 
 function shutdown(signal) {
   console.log(`${signal}: Server wird beendet …`);

@@ -510,7 +510,7 @@ function setupProfile(){
     <div class="secure-box">
       <p>Gib deinen Spitznamen und den persönlichen Sicherungscode ein.</p>
       <input id="recoverNickname" maxlength="24" autocomplete="username" placeholder="Spitzname">
-      <input id="recoverCode" maxlength="14" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" placeholder="z. B. A1B2-C3D4-E5F6">
+      <input id="recoverCode" maxlength="24" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" placeholder="z. B. A1B2-C3D4-E5F6-G7H8-I9J0">
       <button id="recoverProfile" class="secondary">Wanderpass wiederherstellen</button>
       <div id="recoverStatus" class="form-status" aria-live="polite"></div>
     </div>`;
