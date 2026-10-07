@@ -77,6 +77,7 @@ const isProduction = process.env.NODE_ENV === "production";
 console.log("NODE_ENV =", process.env.NODE_ENV);
 console.log("ADMIN_USER =", process.env.ADMIN_USER);
 console.log("ADMIN_HASH vorhanden =", !!process.env.ADMIN_PASSWORD_HASH);
+console.log("TEST123 =", process.env.TEST123);
 const SESSION_DAYS = 180;
 const STAMP_RADIUS_METERS = 200;
 const rateBuckets = new Map();
