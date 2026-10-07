@@ -224,9 +224,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && url.pathname === "/api/admin/login") {
       if (req.method === "POST" && url.pathname === "/api/admin/login") {
  
-return json(res, 200, {
-reached: true
-});
+
  
 const retry = rateLimit(`admin:login:${clientIp(req)}`, LIMITS.adminLoginIp);
  
