@@ -240,7 +240,9 @@ configuredHashExists: !!configuredHash
       const password = String(b.password || "");
       if (username.length > 100 || password.length > 200 || username !== configuredUser || !verifyPassword(password, configuredHash))
         return json(res, 401, { error: "Benutzername oder Passwort ist nicht korrekt." });
+      console.log("Login erfolgreich");
       startAdminSession(res);
+      console.log("Admin-Session wird erstellt");
       return json(res, 200, { ok: true });
     }
     if (req.method === "POST" && url.pathname === "/api/admin/logout") {
