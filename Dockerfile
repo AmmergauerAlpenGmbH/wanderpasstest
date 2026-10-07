@@ -8,5 +8,4 @@ ENV NODE_ENV=production
 ENV PORT=8080
 ENV DB_PATH=/data/gipfelpass.sqlite
 EXPOSE 8080
-VOLUME ["/data"]
 CMD ["node", "server.js"]
