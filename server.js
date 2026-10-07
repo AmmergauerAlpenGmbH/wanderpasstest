@@ -238,10 +238,7 @@ const retry = rateLimit(`admin:login:${clientIp(req)}`, LIMITS.adminLoginIp);
     
       const configuredUser = process.env.ADMIN_USER;
       const configuredHash = process.env.ADMIN_PASSWORD_HASH;
-      return json(res, 200, {
-configuredUser,
-configuredHashExists: !!configuredHash
-});
+      
       if (!configuredUser || !configuredHash) return json(res, 503, { error: "Admin-Zugang ist auf dem Server nicht vollständig konfiguriert." });
       const username = String(b.username || "").trim();
       const password = String(b.password || "");
