@@ -74,6 +74,9 @@ try { db.exec("UPDATE guestbook SET status='approved' WHERE status='pending'"); 
 
 const targets = JSON.parse(fs.readFileSync(path.join(publicDir, "data.json"), "utf8"));
 const isProduction = process.env.NODE_ENV === "production";
+console.log("NODE_ENV =", process.env.NODE_ENV);
+console.log("ADMIN_USER =", process.env.ADMIN_USER);
+console.log("ADMIN_HASH vorhanden =", !!process.env.ADMIN_PASSWORD_HASH);
 const SESSION_DAYS = 180;
 const STAMP_RADIUS_METERS = 200;
 const rateBuckets = new Map();
