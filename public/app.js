@@ -5,9 +5,9 @@ function toast(s){const t=$("#toast");t.textContent=s;t.classList.add("show");se
 function milestone(collected){
   const milestones={
     3:{title:"Wanderwarzi-Abzeichen",text:"Geschafft! Du hast Dir als fleißiger Wanderer das Wanderwarzi-Abzeichen verdient! Zeig den Wanderpass vor und hol Dir das Abzeichen in den Tourist Informationen im Ammertal ab! (Nur für Kids!)",warzi:true},
-    5:{title:"5 Wanderziele erreicht!",text:"Glückwunsch! Du hast die Bronze-Stufe erreicht. Deine bronzene Wandernadel kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."},
-    10:{title:"10 Wanderziele erreicht!",text:"Glückwunsch! Du hast die Silber-Stufe erreicht. Deine silberne Wandernadel kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."},
-    12:{title:"Alle 12 Wanderziele geschafft!",text:"Glückwunsch! Du hast die Gold-Stufe erreicht. Deine goldene Wandernadel kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."}
+    5:{title:"5 Wanderziele erreicht!",text:"Glückwunsch! Du hast die Bronze-Stufe erreicht. Deinen bronzenen Wanderpin kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."},
+    10:{title:"10 Wanderziele erreicht!",text:"Glückwunsch! Du hast die Silber-Stufe erreicht. Deinen silbernen Wanderpin kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."},
+    12:{title:"Alle 12 Wanderziele geschafft!",text:"Glückwunsch! Du hast die Gold-Stufe erreicht. Deinen goldenen Wanderpin kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."}
   };
   const eligible=[3,5,10,12];
   const userKey=state.user?.id||state.user?.nickname||"anonymous";
@@ -346,7 +346,7 @@ function refreshMapMarkers(){
   state.overviewTrackPinned=false;
   if(state.maplibre){
     state.markers.forEach(m=>m.remove());
-    state.markers=state.targets.map(t=>{const m=new maplibregl.Marker({element:mapLibreTargetElement(t),anchor:"bottom"}).setLngLat([t.lon,t.lat]).setPopup(new maplibregl.Popup({offset:32}).setHTML(targetPopup(t))).addTo(state.map);bindTargetPopupActions(m,t);return bindOverviewMarkerInteractions(m,t)});
+    state.markers=state.targets.map(t=>{const m=new maplibregl.Marker({element:mapLibreTargetElement(t),anchor:"center"}).setLngLat([t.lon,t.lat]).setPopup(new maplibregl.Popup({offset:32}).setHTML(targetPopup(t))).addTo(state.map);bindTargetPopupActions(m,t);return bindOverviewMarkerInteractions(m,t)});
   }else if(window.L){
     state.markers.forEach(m=>state.map.removeLayer(m));
     state.markers=state.targets.map(t=>{const m=leafletTargetMarker(t).addTo(state.map).bindPopup(targetPopup(t));bindTargetPopupActions(m,t);return bindOverviewMarkerInteractions(m,t)});
@@ -397,7 +397,7 @@ async function initMap(){
       });
       state.map=map;state.maplibre=true;
       map.addControl(new maplibregl.NavigationControl(),"top-left");
-      state.markers=state.targets.map(t=>{const m=new maplibregl.Marker({element:mapLibreTargetElement(t),anchor:"bottom"}).setLngLat([t.lon,t.lat]).setPopup(new maplibregl.Popup({offset:32}).setHTML(targetPopup(t))).addTo(map);bindTargetPopupActions(m,t);return bindOverviewMarkerInteractions(m,t)});
+      state.markers=state.targets.map(t=>{const m=new maplibregl.Marker({element:mapLibreTargetElement(t),anchor:"center"}).setLngLat([t.lon,t.lat]).setPopup(new maplibregl.Popup({offset:32}).setHTML(targetPopup(t))).addTo(map);bindTargetPopupActions(m,t);return bindOverviewMarkerInteractions(m,t)});
       map.fitBounds([[Math.min(...state.targets.map(t=>t.lon)),Math.min(...state.targets.map(t=>t.lat))],[Math.max(...state.targets.map(t=>t.lon)),Math.max(...state.targets.map(t=>t.lat))]],{padding:35});
       $(".map-actions .muted").textContent="Offline-Karte bereit";
       renderMapList();
@@ -445,9 +445,9 @@ function renderTrophies(){
   const count=collected.size;
   const tiers=[
     {n:3,label:"Wanderwarzi",sub:"ab 3 Wanderzielen",img:"/assets/warzi-star-badge.png?v=66",kids:true,done:count>=3},
-    {n:5,label:"Bronzene Wandernadel",sub:"ab 5 Wanderzielen",medal:"bronze",done:count>=5},
-    {n:10,label:"Silberne Wandernadel",sub:"ab 10 Wanderzielen",medal:"silver",done:count>=10},
-    {n:12,label:"Goldene Wandernadel",sub:"Alle 12 Wanderziele",medal:"gold",done:count>=12}
+    {n:5,label:"Bronzene Wanderpin",sub:"ab 5 Wanderzielen",medal:"bronze",done:count>=5},
+    {n:10,label:"Silberne Wanderpin",sub:"ab 10 Wanderzielen",medal:"silver",done:count>=10},
+    {n:12,label:"Goldene Wanderpin",sub:"Alle 12 Wanderziele",medal:"gold",done:count>=12}
   ];
   ms.innerHTML=tiers.map(t=>`<article class="trophy-card ${t.done?"unlocked":"locked"}"><div class="trophy-icon">${t.img?`<img src="${t.img}" alt="${t.label}">`:`<span class="medal-icon ${t.medal||""}" aria-hidden="true"></span>`}</div><div><b>${t.label}</b><small>${t.done?"✓ Erreicht":t.sub}</small></div></article>`).join("");
   ss.innerHTML=state.targets.map((t,i)=>`<button type="button" class="summit-trophy ${collected.has(t.id)?"unlocked":"locked"}" data-trophy-target="${t.id}"><span class="summit-number">${String(i+1).padStart(2,"0")}</span><span class="summit-icon">🏔️</span><span class="summit-name"><b>${t.name}</b><small>${collected.has(t.id)?"✓ Gesammelt":"Noch offen"}</small></span></button>`).join("");

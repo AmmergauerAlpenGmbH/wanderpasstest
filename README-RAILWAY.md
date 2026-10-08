@@ -1,14 +1,13 @@
-# railway-testversion-v3
+# railway-testversion-v4
 
 Testdeployment des Ammergauer Alpen Wanderpasses.
 
-- Railway-Port über `process.env.PORT`
-- keine Dockerfile-VOLUME-Deklaration
-- Recovery-Code-Fix
-- Testbanner
-- robots.txt / noindex
-- überarbeitete „Wie funktioniert's?“-Fassung
+Änderungen gegenüber v2-fixed:
+- „Wie funktioniert’s?“ vollständig aktualisiert
+- Belohnungsbezeichnung auf „Pin“ umgestellt
+- Wanderwarzi ausdrücklich als Kinder-Abzeichen beschrieben
+- Kartenmarker in MapLibre auf `anchor: center` korrigiert, damit die Koordinate bei einem runden Marker exakt im Mittelpunkt liegt
+- Gipfelkoordinaten für Scheinbergspitz, Große Klammspitz und Kreuzspitze präzisiert
+- Service-Worker/Asset-Version erhöht, damit die neue Version trotz PWA-Cache geladen wird
 
-Die Testinstanz ist öffentlich erreichbar. Bitte keine echten persönlichen Daten verwenden.
-
-Vor dem Livegang: persistente Datenhaltung, Backups, Admin-Erweiterungen und SEO/Indexierung prüfen.
+Railway-Fixes bleiben enthalten: kein Dockerfile-VOLUME `/data`; Serverport über `process.env.PORT`.

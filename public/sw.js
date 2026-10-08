@@ -1,5 +1,5 @@
-const C="gp-cache-v71";
-const A=["/","/index.html","/styles.css?v=63","/app.js?v=63","/data.json","/manifest.webmanifest","/assets/naturpark-ammergauer-alpen-logo-transparent.png?v=63","/assets/naturpark-berg-symbol.png?v=63","/assets/warzi-wandern.png?v=63","/assets/warzi-star-badge.png?v=63","/assets/fonts/born-ready.otf?v=63","/impressum.html","/datenschutz.html","/rechtliches.html"];
+const C="gp-cache-v73";
+const A=["/","/index.html","/styles.css?v=73","/app.js?v=73","/data.json","/manifest.webmanifest","/assets/naturpark-ammergauer-alpen-logo-transparent.png?v=73","/assets/naturpark-berg-symbol.png?v=73","/assets/warzi-wandern.png?v=73","/assets/warzi-star-badge.png?v=73","/assets/fonts/born-ready.otf?v=73","/impressum.html","/datenschutz.html","/rechtliches.html"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(C).then(c=>c.addAll(A)).then(()=>self.skipWaiting())));
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener("fetch",e=>{
