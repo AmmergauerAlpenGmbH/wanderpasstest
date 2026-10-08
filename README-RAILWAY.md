@@ -1,13 +1,14 @@
-# railway-testversion
+# railway-testversion-v3
 
-Testdeployment des Ammergauer Alpen Wanderpasses. Bitte keine echten persönlichen Daten verwenden.
+Testdeployment des Ammergauer Alpen Wanderpasses.
 
-## Railway
+- Railway-Port über `process.env.PORT`
+- keine Dockerfile-VOLUME-Deklaration
+- Recovery-Code-Fix
+- Testbanner
+- robots.txt / noindex
+- überarbeitete „Wie funktioniert's?“-Fassung
 
-1. GitHub-Repository `railway-testversion` anlegen und diesen Projektordner hochladen.
-2. Railway → New Project → Deploy from GitHub repo.
-3. Repository auswählen und deployen.
-4. Settings → Networking → Generate Domain.
-5. Für persistente Testdaten optional ein Railway Volume anlegen und unter `/data` mounten; dann `DB_PATH=/data/wanderpass.sqlite` setzen. Ohne Volume dürfen Daten bei Redeployments verloren gehen.
-6. `NODE_ENV=production` setzen.
-7. `/api/health` ist als Healthcheck hinterlegt.
+Die Testinstanz ist öffentlich erreichbar. Bitte keine echten persönlichen Daten verwenden.
+
+Vor dem Livegang: persistente Datenhaltung, Backups, Admin-Erweiterungen und SEO/Indexierung prüfen.

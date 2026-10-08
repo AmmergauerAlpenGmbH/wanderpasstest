@@ -222,22 +222,17 @@ const server = http.createServer(async (req, res) => {
       return json(res, 403, { error: "Ungültige Herkunft der Anfrage." });
 
     if (req.method === "POST" && url.pathname === "/api/admin/login") {
-
       const retry = rateLimit(`admin:login:${clientIp(req)}`, LIMITS.adminLoginIp);
       if (retry) return json(res, 429, { error: "Zu viele Anmeldeversuche. Bitte später erneut versuchen.", retryAfter: retry });
       const b = await body(req);
-    
       const configuredUser = process.env.ADMIN_USER;
       const configuredHash = process.env.ADMIN_PASSWORD_HASH;
-      
       if (!configuredUser || !configuredHash) return json(res, 503, { error: "Admin-Zugang ist auf dem Server nicht vollständig konfiguriert." });
       const username = String(b.username || "").trim();
       const password = String(b.password || "");
       if (username.length > 100 || password.length > 200 || username !== configuredUser || !verifyPassword(password, configuredHash))
         return json(res, 401, { error: "Benutzername oder Passwort ist nicht korrekt." });
-      console.log("Login erfolgreich");
       startAdminSession(res);
-      console.log("Admin-Session wird erstellt");
       return json(res, 200, { ok: true });
     }
     if (req.method === "POST" && url.pathname === "/api/admin/logout") {
