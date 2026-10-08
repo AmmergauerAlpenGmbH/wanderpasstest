@@ -159,3 +159,7 @@
 .medal-icon.bronze{color:#b87333}.medal-icon.silver{color:#aeb4ba}.medal-icon.gold{color:#d4a72c}
 .tier-medal .medal-icon{width:30px;height:30px}.trophy-icon .medal-icon{width:54px;height:54px}.trophy-icon .medal-icon::before{left:12px;right:12px;top:-11px;height:17px}
 @media(max-width:700px){.brand h1{top:2px}.tier-medal .medal-icon{width:29px;height:29px}.trophy-icon .medal-icon{width:50px;height:50px}.gps{background:var(--red)!important}}
+
+
+/* v67: Belohnungen in der Wie-funktioniert's?-Box klar als Liste dargestellt */
+.howto-rewards{margin-top:6px}.howto-rewards ul{margin:0;padding-left:18px;color:var(--muted);font-size:13px;line-height:1.4}.howto-list li .howto-rewards li{display:list-item;background:transparent;border-radius:0;padding:0;margin:3px 0;gap:0}.howto-rewards p{margin:9px 0 0;color:var(--muted);font-size:13px;line-height:1.4}@media(max-width:700px){.howto-rewards ul,.howto-rewards p{font-size:13px}}

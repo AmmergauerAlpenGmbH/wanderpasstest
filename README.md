@@ -129,3 +129,8 @@ npm.cmd start
 Danach `http://localhost:8081` öffnen.
 
 Die Testversion bitte **nicht öffentlich deployen** und nicht als v41 behandeln. Für den echten Betrieb bleibt die GPS-Prüfung aus v40/v39 unverändert.
+
+## v6
+- Große Klammspitz: Kartenpunkt auf OSM-Gipfelknoten 47.58061, 10.90936 angepasst.
+- Kreuzspitze: Kartenpunkt auf OSM-Gipfelknoten 47.52654, 10.91799 angepasst.
+- PWA-Cache auf v75 erhöht.
