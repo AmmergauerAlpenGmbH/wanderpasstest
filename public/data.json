@@ -10,7 +10,7 @@
     "lon": 10.98697,
     "radius": 100,
     "coordinateSource": "Kartenkoordinaten des Wasserkraftwerks Kammerl (OpenStreetMap/Wikidata-Abgleich)",
-    "gpxUrl": "",
+    "gpxUrl": "https://www.naturpark-ammergauer-alpen.de/?elevations=true&limit=1&mkt=de&ndsajax=destination-data-proxy&no_cache=1&q=globalid%3At_100297366&template=gpx&times=true",
     "gpsRadius": 100,
     "coordinateNote": "GPS-Stempelziel am Kraftwerk Kammerl; Koordinate vor Livegang am tatsächlichen zugänglichen Stempelpunkt prüfen.",
     "tour": {
