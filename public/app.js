@@ -1,4 +1,4 @@
-const state={targets:[],user:null,stamps:[],map:null,markers:[],syncing:false,tourMap:null,tourUserMarker:null,tourProfileMarker:null,tourProfileData:null,overviewTrackLayers:[],overviewTrackTarget:null,overviewTrackPinned:false,pendingMilestone:null,isTestMode:false};
+const state={targets:[],user:null,stamps:[],guestbookTargetIds:[],map:null,markers:[],syncing:false,tourMap:null,tourUserMarker:null,tourProfileMarker:null,tourProfileData:null,overviewTrackLayers:[],overviewTrackTarget:null,overviewTrackPinned:false,pendingMilestone:null,isTestMode:false};
 const $=s=>document.querySelector(s);
 async function api(path,opt={}){const headers={"Content-Type":"application/json",...(opt.headers||{})};const r=await fetch(path,{...opt,headers,credentials:"same-origin"});const d=await r.json();if(!r.ok){const e=Error(d.error||"Fehler");e.status=r.status;throw e;}return d}
 function toast(s){const t=$("#toast");t.textContent=s;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000)}
@@ -7,9 +7,9 @@ function milestone(collected){
     3:{title:"Wanderwarzi-Abzeichen",text:"Geschafft! Du hast Dir als fleißiger Wanderer das Wanderwarzi-Abzeichen verdient! Zeig den Wanderpass vor und hol Dir das Abzeichen in den Tourist Informationen im Ammertal ab! (Nur für Kids!)",warzi:true},
     5:{title:"5 Wanderziele erreicht!",text:"Glückwunsch! Du hast die Bronze-Stufe erreicht. Deinen bronzenen Wanderpin kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."},
     10:{title:"10 Wanderziele erreicht!",text:"Glückwunsch! Du hast die Silber-Stufe erreicht. Deinen silbernen Wanderpin kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."},
-    12:{title:"Alle 12 Wanderziele geschafft!",text:"Glückwunsch! Du hast die Gold-Stufe erreicht. Deinen goldenen Wanderpin kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."}
+    13:{title:"Alle 13 Wanderziele geschafft!",text:"Glückwunsch! Du hast die Gold-Stufe erreicht. Deinen goldenen Wanderpin kannst Du Dir in einer der Tourist Informationen abholen. Einfach Wanderpass vorzeigen."}
   };
-  const eligible=[3,5,10,12];
+  const eligible=[3,5,10,13];
   const userKey=state.user?.id||state.user?.nickname||"anonymous";
   const keyPrefix=state.isTestMode?"gp.milestone.test.v66":"gp.milestone";
   const hit=eligible.find(n=>collected===n && !localStorage.getItem(`${keyPrefix}.${userKey}.${n}`));
@@ -33,10 +33,10 @@ function showMilestoneAfterCheckin(){
 }
 function loadUser(){try{state.user=JSON.parse(localStorage.getItem("gp.user"))}catch{state.user=null}}
 function saveUser(){const u={id:state.user?.id,nickname:state.user?.nickname};localStorage.setItem("gp.user",JSON.stringify(u))}
-function tierForCount(collected){if(collected>=12)return "Gold";if(collected>=10)return "Silber";if(collected>=5)return "Bronze";return "";}
-function renderTierBadge(collected){const el=$("#titleBadge");if(!el)return;const tiers=[{n:3,label:"Wanderwarzi",kids:true},{n:5,label:"Bronze",medal:"bronze"},{n:10,label:"Silber",medal:"silver"},{n:12,label:"Gold",medal:"gold"}]; el.innerHTML=tiers.map(t=>`<div class="tier-medal ${collected>=t.n?"reached":"locked"}${t.kids?" tier-kids":""}"><span class="tier-medal-icon">${t.kids?`<img class="kids-star" src="/assets/warzi-star-badge.png?v=66" alt="Wanderwarzi-Abzeichen">`:`<span class="medal-icon ${t.medal||""}" aria-hidden="true"></span>`}</span><span class="tier-medal-label">${t.label}</span><small>ab ${t.n}</small></div>`).join("");}
-function renderPass(){const passTargets=state.targets;const set=new Set(state.stamps.map(x=>x.target_id));const collected=Math.min(passTargets.length,[...set].filter(id=>passTargets.some(t=>t.id===id)).length);const displayCount=collected;$("#count").textContent=displayCount;$("#passTotal").textContent=passTargets.length;$("#targetTotal").textContent=passTargets.length;$("#targetTotalHero").textContent=passTargets.length;$("#targetTotalMap").textContent=passTargets.length;$("#bar").style.width=(passTargets.length?Math.min(100,collected/passTargets.length*100):0)+"%";renderTierBadge(collected);renderSyncStatus();$("#targets").innerHTML=state.targets.map((t,i)=>`<article class="card ${set.has(t.id)?"done":""}"><div class="top"><b>${String(i+1).padStart(2,"0")}</b><span class="pill ${t.level}">${t.levelLabel}</span></div><button class="target-title-button" data-tour="${t.id}">${t.name}</button><small>${t.height}</small><p>${t.description}</p><div class="tour-mini"><span>🥾 ${t.tour.distance}</span><span>⛰️ ${t.tour.ascent} hm</span><span>⏱️ ${t.tour.duration}</span></div><div class="stamp">${set.has(t.id)?`<button class="stamp-collected" data-book="${t.id}"><img src="/assets/naturpark-berg-symbol.png" alt=""><b>Geschafft! Schreibe jetzt ins Gipfelbuch!</b><span class="stamp-check">✓</span></button>`:`Noch nicht gesammelt`}</div>${set.has(t.id)?"":`<button class="gps" data-id="${t.id}">⌖ Stempel holen</button>`}<button class="tour-link" data-tour="${t.id}">🥾 Tour ansehen</button><button class="book-link" data-target="${t.id}">Gipfelbuch ansehen</button></article>`).join("");
-if(state.map)refreshMapMarkers();document.querySelectorAll(".gps").forEach(b=>b.onclick=()=>gps(b.dataset.id));document.querySelectorAll("[data-tour]").forEach(b=>b.onclick=()=>openTour(b.dataset.tour));document.querySelectorAll(".book-link").forEach(b=>b.onclick=()=>openBook(b.dataset.target));document.querySelectorAll(".stamp-collected").forEach(b=>b.onclick=()=>openEntry(b.dataset.book))}
+function tierForCount(collected){if(collected>=13)return "Gold";if(collected>=10)return "Silber";if(collected>=5)return "Bronze";return "";}
+function renderTierBadge(collected){const el=$("#titleBadge");if(!el)return;const tiers=[{n:3,label:"Wanderwarzi",kids:true},{n:5,label:"Bronze",medal:"bronze"},{n:10,label:"Silber",medal:"silver"},{n:13,label:"Gold",medal:"gold"}]; el.innerHTML=tiers.map(t=>`<div class="tier-medal ${collected>=t.n?"reached":"locked"}${t.kids?" tier-kids":""}"><span class="tier-medal-icon">${t.kids?`<img class="kids-star" src="/assets/warzi-star-badge.png?v=66" alt="Wanderwarzi-Abzeichen">`:`<span class="medal-icon ${t.medal||""}" aria-hidden="true"></span>`}</span><span class="tier-medal-label">${t.label}</span><small>ab ${t.n}</small></div>`).join("");}
+function renderPass(){const passTargets=state.targets;const set=new Set(state.stamps.map(x=>x.target_id));const collected=Math.min(passTargets.length,[...set].filter(id=>passTargets.some(t=>t.id===id)).length);const displayCount=collected;$("#count").textContent=displayCount;$("#passTotal").textContent=passTargets.length;$("#targetTotal").textContent=passTargets.length;$("#targetTotalHero").textContent=passTargets.length;$("#targetTotalMap").textContent=passTargets.length;$("#bar").style.width=(passTargets.length?Math.min(100,collected/passTargets.length*100):0)+"%";renderTierBadge(collected);renderSyncStatus();$("#targets").innerHTML=state.targets.map((t,i)=>`<article class="card ${set.has(t.id)?"done":""}"><div class="top"><b>${String(i+1).padStart(2,"0")}</b><span class="pill ${t.level}">${t.levelLabel}</span></div><button class="target-title-button" data-tour="${t.id}">${t.name}</button><small>${t.height}</small><p>${t.description}</p><div class="tour-mini"><span>🥾 ${t.tour.distance}</span><span>⛰️ ${t.tour.ascent} hm</span><span>⏱️ ${t.tour.duration}</span></div><div class="stamp">${set.has(t.id)?(state.guestbookTargetIds.includes(t.id)?`<button class="stamp-collected" data-book-view="${t.id}"><img src="/assets/naturpark-berg-symbol.png" alt=""><b>Geschafft! Dein Eintrag ist erstellt – Gipfelbuch ansehen</b><span class="stamp-check">✓</span></button>`:`<button class="stamp-collected" data-book="${t.id}"><img src="/assets/naturpark-berg-symbol.png" alt=""><b>Geschafft! Schreibe jetzt ins Gipfelbuch!</b><span class="stamp-check">✓</span></button>`):`Noch nicht gesammelt`}</div>${set.has(t.id)?"":`<button class="gps" data-id="${t.id}">⌖ Stempel holen</button>`}<button class="tour-link" data-tour="${t.id}">🥾 Tour ansehen</button><button class="book-link" data-target="${t.id}">Gipfelbuch ansehen</button></article>`).join("");
+if(state.map)refreshMapMarkers();document.querySelectorAll(".gps").forEach(b=>b.onclick=()=>gps(b.dataset.id));document.querySelectorAll("[data-tour]").forEach(b=>b.onclick=()=>openTour(b.dataset.tour));document.querySelectorAll(".book-link").forEach(b=>b.onclick=()=>openBook(b.dataset.target));document.querySelectorAll(".stamp-collected[data-book]").forEach(b=>b.onclick=()=>openEntry(b.dataset.book));document.querySelectorAll(".stamp-collected[data-book-view]").forEach(b=>b.onclick=()=>openBook(b.dataset.bookView))}
 
 function getQueue(){try{return JSON.parse(localStorage.getItem("gp.queue.v33")||"[]")}catch{return[]}}
 function saveQueue(q){localStorage.setItem("gp.queue.v33",JSON.stringify(q));renderSyncStatus()}
@@ -49,7 +49,7 @@ function renderSyncStatus(){
 }
 function addOfflineStamp(event){const q=getQueue();if(!q.some(x=>x.targetId===event.targetId && x.userId===event.userId)){q.push(event);saveQueue(q)}}
 async function syncQueue(){if(state.syncing||!state.user||!navigator.onLine)return;state.syncing=true;try{const q=getQueue();const rest=[];for(const e of q){if(e.userId!==state.user.id){rest.push(e);continue}try{await api("/api/stamps",{method:"POST",body:JSON.stringify(e)});}catch{rest.push(e)}}saveQueue(rest);renderSyncStatus();if(q.length!==rest.length){await refresh();toast("✓ Offline-Stempel synchronisiert.")}}finally{state.syncing=false}}
-const STAMP_RADIUS_METERS=200;
+const STAMP_RADIUS_METERS=100;
 const GPS_ACQUISITION_MS=12000;
 const GPS_GOOD_ACCURACY_METERS=50;
 function getGpsPosition(){return new Promise((resolve,reject)=>{let best=null,done=false,timer=null,watchId=null;const finish=(value,error)=>{if(done)return;done=true;if(timer)clearTimeout(timer);if(watchId!==null)navigator.geolocation.clearWatch(watchId);if(value)resolve(value);else reject(error||new Error("Standortzugriff nicht möglich."))};watchId=navigator.geolocation.watchPosition(p=>{if(!best||p.coords.accuracy<best.coords.accuracy)best=p;if(p.coords.accuracy<=GPS_GOOD_ACCURACY_METERS)finish(p)},e=>{if(!best)finish(null,e)}, {enableHighAccuracy:true,maximumAge:0,timeout:GPS_ACQUISITION_MS});timer=setTimeout(()=>finish(best),GPS_ACQUISITION_MS);})}
@@ -68,7 +68,7 @@ async function gps(id){
     await api("/api/stamps",{method:"POST",body:JSON.stringify({targetId:id,latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy})});
     await refresh();
     const afterCount=Math.min(state.targets.length,new Set(state.stamps.map(x=>x.target_id)).size);
-    const reached=[3,5,10,12].find(n=>beforeCount<n && afterCount>=n);
+    const reached=[3,5,10,13].find(n=>beforeCount<n && afterCount>=n);
     if(reached)state.pendingMilestone={count:reached,target:t};
     toast(`✓ ${t.name}: Stempel gesammelt.`);
     setTimeout(()=>{showCheckin(t);},350);
@@ -355,14 +355,14 @@ function refreshMapMarkers(){
 async function fetchTourGpx(id){
   const req=new Request(`/api/tours/${encodeURIComponent(id)}/gpx`);
   try{
-    const cache=await caches.open("gp-cache-v63");
+    const cache=await caches.open("gp-cache-v77");
     const cached=await cache.match(req);
     if(cached){const xml=await cached.text();if(xml.includes("<gpx")||xml.includes(":gpx"))return xml;}
   }catch{}
   const r=await fetch(req,{cache:"force-cache"});
   if(!r.ok)throw new Error("GPX nicht verfügbar");
   const xml=await r.text();
-  try{const cache=await caches.open("gp-cache-v63");await cache.put(req,new Response(xml,{headers:{"Content-Type":"application/gpx+xml"}}))}catch{}
+  try{const cache=await caches.open("gp-cache-v77");await cache.put(req,new Response(xml,{headers:{"Content-Type":"application/gpx+xml"}}))}catch{}
   return xml;
 }
 function targetPopup(t){
@@ -447,7 +447,7 @@ function renderTrophies(){
     {n:3,label:"Wanderwarzi",sub:"ab 3 Wanderzielen",img:"/assets/warzi-star-badge.png?v=66",kids:true,done:count>=3},
     {n:5,label:"Bronzene Wanderpin",sub:"ab 5 Wanderzielen",medal:"bronze",done:count>=5},
     {n:10,label:"Silberne Wanderpin",sub:"ab 10 Wanderzielen",medal:"silver",done:count>=10},
-    {n:12,label:"Goldene Wanderpin",sub:"Alle 12 Wanderziele",medal:"gold",done:count>=12}
+    {n:13,label:"Goldene Wanderpin",sub:"Alle 13 Wanderziele",medal:"gold",done:count>=13}
   ];
   ms.innerHTML=tiers.map(t=>`<article class="trophy-card ${t.done?"unlocked":"locked"}"><div class="trophy-icon">${t.img?`<img src="${t.img}" alt="${t.label}">`:`<span class="medal-icon ${t.medal||""}" aria-hidden="true"></span>`}</div><div><b>${t.label}</b><small>${t.done?"✓ Erreicht":t.sub}</small></div></article>`).join("");
   ss.innerHTML=state.targets.map((t,i)=>`<button type="button" class="summit-trophy ${collected.has(t.id)?"unlocked":"locked"}" data-trophy-target="${t.id}"><span class="summit-number">${String(i+1).padStart(2,"0")}</span><span class="summit-icon">🏔️</span><span class="summit-name"><b>${t.name}</b><small>${collected.has(t.id)?"✓ Gesammelt":"Noch offen"}</small></span></button>`).join("");
@@ -552,9 +552,9 @@ function setupProfile(){
   };
 }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));$("#view-"+b.dataset.tab).classList.remove("hidden");if(b.dataset.tab==="book")loadBook($("#bookFilter").value);if(b.dataset.tab==="map"){setTimeout(()=>{initMap();state.map?.invalidateSize()},50)}if(b.dataset.tab==="profile")setupProfile()});
-$("#newEntry").onclick=()=>openEntry();$(".close").onclick=()=>{$("#modal").classList.add("hidden");showPendingMilestone()};$("#saveEntry").onclick=async()=>{try{await api("/api/guestbook",{method:"POST",body:JSON.stringify({targetId:$("#entryTarget").value,text:$("#entryText").value})});$("#entryText").value="";$("#modal").classList.add("hidden");await loadBook($("#bookFilter").value);toast("Eintrag veröffentlicht.");showPendingMilestone()}catch(e){toast(e.message)}};$("#tourBack").onclick=()=>{document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));$("#view-pass").classList.remove("hidden")};$("#closeCheckin").onclick=closeCheckin;$("#checkinLater").onclick=closeCheckin;$("#checkinBook").onclick=()=>{const id=$("#checkinModal").dataset.target;closeCheckin(false);openEntry(id)};
-async function refresh(){const me=await api("/api/me");state.isTestMode=me.testMode===true;if(me.user){state.user={...state.user,...me.user};saveUser();}state.stamps=me.stamps;renderPass()}
-async function prefetchTourTracks(){if(!navigator.onLine||!state.targets.length)return;try{const cache=await caches.open("gp-cache-v63");for(const t of state.targets){const req=new Request(`/api/tours/${encodeURIComponent(t.id)}/gpx`);if(await cache.match(req))continue;try{const r=await fetch(req,{cache:"no-cache"});if(r.ok)await cache.put(req,r.clone())}catch{}}}catch{}}
+$("#newEntry").onclick=()=>openEntry();$(".close").onclick=()=>{$("#modal").classList.add("hidden");showPendingMilestone()};$("#saveEntry").onclick=async()=>{try{await api("/api/guestbook",{method:"POST",body:JSON.stringify({targetId:$("#entryTarget").value,text:$("#entryText").value})});$("#entryText").value="";$("#modal").classList.add("hidden");await refresh();await loadBook($("#bookFilter").value);toast("Eintrag veröffentlicht.");showPendingMilestone()}catch(e){toast(e.message)}};$("#tourBack").onclick=()=>{document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));$("#view-pass").classList.remove("hidden")};$("#closeCheckin").onclick=closeCheckin;$("#checkinLater").onclick=closeCheckin;$("#checkinBook").onclick=()=>{const id=$("#checkinModal").dataset.target;closeCheckin(false);openEntry(id)};
+async function refresh(){const me=await api("/api/me");state.isTestMode=me.testMode===true;if(me.user){state.user={...state.user,...me.user};saveUser();}state.stamps=me.stamps;state.guestbookTargetIds=Array.isArray(me.guestbookTargets)?me.guestbookTargets:[];renderPass()}
+async function prefetchTourTracks(){if(!navigator.onLine||!state.targets.length)return;try{const cache=await caches.open("gp-cache-v77");for(const t of state.targets){const req=new Request(`/api/tours/${encodeURIComponent(t.id)}/gpx`);if(await cache.match(req))continue;try{const r=await fetch(req,{cache:"no-cache"});if(r.ok)await cache.put(req,r.clone())}catch{}}}catch{}}
 document.addEventListener("click",e=>{if(e.target.closest("#openTrophies"))openTrophies();if(e.target.id==="closeTrophies"||e.target.id==="trophyModal")$("#trophyModal").classList.add("hidden")});
 window.addEventListener("online",()=>{syncQueue();updateMapStatus();renderSyncStatus()});window.addEventListener("offline",()=>{updateMapStatus();renderSyncStatus()});document.addEventListener("click",e=>{if(e.target.id==="closeMilestone"||e.target.id==="milestoneOk")$("#milestoneModal").classList.add("hidden")});
 async function boot(){loadUser();try{state.targets=await api("/api/targets")}catch{try{state.targets=await fetch("/data.json",{cache:"force-cache"}).then(r=>r.json())}catch{state.targets=[]}}setupBook();setupProfile();if(state.user){try{await refresh();await syncQueue()}catch(e){if(e.status===401){localStorage.removeItem("gp.user");state.user=null;setupProfile();renderPass();toast("Deine Sitzung ist abgelaufen. Stelle den Wanderpass mit deinem Sicherungscode wieder her.")}else{renderPass();toast("Server gerade nicht erreichbar. Offline-Modus aktiv.")}}}else renderPass();prefetchTourTracks()}

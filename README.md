@@ -89,14 +89,14 @@ Ein `Dockerfile` ist enthalten. Für einen ersten Livebetrieb reicht ein einzeln
 - Stempel-Anti-Cheat weiter härten (GPS-Genauigkeit, Zeitfenster, Plausibilität und ggf. Geräte-/Attestierungsmechanismen).
 
 ## v25 – Tourenseiten & Gipfelbuch-Logik
-- 12 Stempelziele nach offizieller Tour-Schwierigkeit sortiert, innerhalb der Stufen nach Aufstiegshöhenmetern.
+- 13 Stempelziele nach offizieller Tour-Schwierigkeit sortiert, innerhalb der Stufen nach Aufstiegshöhenmetern.
 - Zielnamen an die offiziellen Tournamen angepasst (u. a. Scheinbergspitz, Große Klammspitz).
 - Eigene Touren-Detailseiten innerhalb der PWA mit Distanz, Aufstieg, Gehzeit, Startpunkt und Tourzusammenfassung.
 - Keine Weiterleitung auf externe Tourenseiten aus der Nutzeroberfläche.
 - Gipfelbuch-Einträge können serverseitig nur für bereits gesammelte Stempel erstellt werden.
 - Nach erfolgreichem Stempel erscheint ein Hinweis zum direkten Eintrag ins Gipfelbuch.
 - Sichtbarer Eintrag-schreiben-Button und Tourenbutton in der Karte.
-- Titel/Abzeichen bei 5, 10 und 12 gesammelten Gipfeln: Bronze, Silber und Gold.
+- Titel/Abzeichen bei 5, 10 und 13 gesammelten Zielen: Bronze, Silber und Gold.
 - Admin-Statistik um Profile, Wanderer mit Stempel, gesammelte Gipfel und Gästebucheinträge erweitert.
 
 

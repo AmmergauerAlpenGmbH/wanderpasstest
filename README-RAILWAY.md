@@ -11,3 +11,10 @@ Testdeployment des Ammergauer Alpen Wanderpasses.
 - Service-Worker/Asset-Version erhöht, damit die neue Version trotz PWA-Cache geladen wird
 
 Railway-Fixes bleiben enthalten: kein Dockerfile-VOLUME `/data`; Serverport über `process.env.PORT`.
+
+
+## Änderungen in v7
+- GPS-Stempelradius client- und serverseitig auf 100 Meter reduziert.
+- Nach einem Gipfelbucheintrag zeigt das jeweilige Ziel den vorhandenen Eintrag an, statt erneut zum Schreiben aufzufordern.
+- API liefert die bereits beschriebenen Ziele des angemeldeten Profils; doppelte Einträge pro Profil und Ziel werden serverseitig verhindert.
+- PWA-Cache auf v76 angehoben.

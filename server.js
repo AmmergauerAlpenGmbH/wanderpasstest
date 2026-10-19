@@ -75,7 +75,7 @@ try { db.exec("UPDATE guestbook SET status='approved' WHERE status='pending'"); 
 const targets = JSON.parse(fs.readFileSync(path.join(publicDir, "data.json"), "utf8"));
 const isProduction = process.env.NODE_ENV === "production";
 const SESSION_DAYS = 180;
-const STAMP_RADIUS_METERS = 200;
+const STAMP_RADIUS_METERS = 100;
 const rateBuckets = new Map();
 const RATE_WINDOW_MS = 15 * 60 * 1000;
 const LIMITS = {
@@ -281,7 +281,8 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/api/me") {
       const u = user(req, res); if (!u) return;
       const stamps = db.prepare("SELECT target_id,collected_at FROM stamps WHERE user_id=? ORDER BY collected_at").all(u.id);
-      return json(res, 200, { user: { id: u.id, nickname: u.nickname }, stamps, testMode: TEST_CHECKIN_MODE });
+      const guestbookTargets = db.prepare("SELECT DISTINCT target_id FROM guestbook WHERE user_id=?").all(u.id).map(row => row.target_id);
+      return json(res, 200, { user: { id: u.id, nickname: u.nickname }, stamps, guestbookTargets, testMode: TEST_CHECKIN_MODE });
     }
 
     if (TEST_CHECKIN_MODE && req.method === "POST" && url.pathname === "/api/stamps/test") {
@@ -402,6 +403,8 @@ const server = http.createServer(async (req, res) => {
       if (text.length < 3) return json(res, 400, { error: "Bitte mindestens 3 Zeichen schreiben." });
       const hasStamp = db.prepare("SELECT id FROM stamps WHERE user_id=? AND target_id=?").get(u.id, targetId);
       if (!hasStamp) return json(res, 403, { error: "Für dieses Gipfelbuch brauchst du zuerst den passenden Stempel." });
+      const existingEntry = db.prepare("SELECT id FROM guestbook WHERE user_id=? AND target_id=? LIMIT 1").get(u.id, targetId);
+      if (existingEntry) return json(res, 409, { error: "Du hast für dieses Ziel bereits einen Gipfelbucheintrag verfasst." });
       const info = db.prepare("INSERT INTO guestbook(user_id,target_id,text,status) VALUES(?,?,?,'approved')").run(u.id, targetId, text);
       return json(res, 201, { id: info.lastInsertRowid, status: "pending" });
     }

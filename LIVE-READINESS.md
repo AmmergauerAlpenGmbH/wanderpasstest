@@ -8,4 +8,4 @@
 - Vor dem ersten Start leere Produktionsdatenbank anlegen; Testdaten nicht übernehmen.
 - Regelmäßige SQLite-Backups außerhalb des Containers einrichten.
 - Vor öffentlichem Start Datenschutz/Impressum/Hosting-Details mit dem zuständigen Datenschutzbeauftragten final prüfen.
-- Vor Saisonstart alle 12 GPS-Ziele und GPX-Tracks vor Ort abnehmen.
+- Vor Saisonstart alle 13 GPS-Ziele und GPX-Tracks vor Ort abnehmen.

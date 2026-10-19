@@ -1,3 +1,3 @@
-Railway-Testversion v6
+Railway-Testversion v8 - Kraftwerk Kammerl
 
-Kartenpunkte für Große Klammspitz und Kreuzspitze an die aktuellen OpenStreetMap-Gipfelknoten angepasst.
+Neues leichtes Stempelziel Kraftwerk Kammerl an erster Stelle; Gesamtzahl 13 Ziele; Abzeichen-Text aktualisiert; Gold-Meilenstein auf 13 Ziele umgestellt; GPS-Radius aller Ziele auf 100 m gesetzt; Cache-Version auf v77 aktualisiert.
